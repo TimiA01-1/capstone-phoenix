@@ -1,0 +1,29 @@
+---
+- name: Check if k3s is already installed
+  stat:
+    path: /usr/local/bin/k3s
+  register: k3s_binary
+
+- name: Download and install k3s server
+  shell: curl -sfL https://get.k3s.io | sh -s - server --write-kubeconfig-mode 644
+  when: not k3s_binary.stat.exists
+
+- name: Wait for node-token file to exist
+  wait_for:
+    path: /var/lib/rancher/k3s/server/node-token
+    timeout: 60
+
+- name: Read the node token
+  slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: node_token_raw
+
+- name: Store node token as a fact for other hosts to use
+  set_fact:
+    node_token: "{{ node_token_raw.content | b64decode | trim }}"
+
+- name: Fetch kubeconfig to local machine
+  fetch:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: ./kubeconfig
+    flat: yes

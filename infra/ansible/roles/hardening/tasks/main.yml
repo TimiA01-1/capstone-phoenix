@@ -1,0 +1,67 @@
+---
+- name: Create a non-root sudo user
+  user:
+    name: deploy
+    groups: sudo
+    shell: /bin/bash
+    create_home: yes
+
+- name: Set up authorized_keys for deploy user
+  authorized_key:
+    user: deploy
+    state: present
+    key: "{{ lookup('file', 'phoenix-key.pub') }}"
+
+- name: Allow deploy user passwordless sudo
+  copy:
+    dest: /etc/sudoers.d/deploy
+    content: "deploy ALL=(ALL) NOPASSWD:ALL\n"
+    mode: '0440'
+
+- name: Disable SSH password authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  notify: restart sshd
+
+- name: Disable root SSH login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+  notify: restart sshd
+
+- name: Install ufw
+  apt:
+    name: ufw
+    state: present
+    update_cache: yes
+
+- name: Allow all traffic within the VPC (node-to-node k3s traffic)
+  ufw:
+    rule: allow
+    src: 10.0.0.0/16
+
+- name: Allow SSH through ufw
+  ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Allow HTTP through ufw
+  ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
+- name: Allow HTTPS through ufw
+  ufw:
+    rule: allow
+    port: '443'
+    proto: tcp
+
+- name: Enable ufw
+  ufw:
+    state: enabled
+    policy: deny
