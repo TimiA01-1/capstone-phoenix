@@ -23,6 +23,7 @@ node-token
 *.key
 id_rsa*
 infra/terraform/phoenix-key
+infra/ansible/phoenix-key
 
 # argo / helm local
 charts/*.tgz
