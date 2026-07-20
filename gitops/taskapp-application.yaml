@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: taskapp
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/TimiA01-1/capstone-phoenix.git
+    targetRevision: main
+    path: manifests/base
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: taskapp
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
