@@ -11,7 +11,7 @@ spec:
       containers:
         - name: migrate
           image: ghcr.io/ts-a-devops/taskapp-backend:5d6b8fc
-          command: ["python3", "-u", "-c", "from app import create_app, db\napp = create_app()\nwith app.app_context():\n    db.create_all()\n    db.session.commit()\n    print('Schema created successfully')"]
+          command: ["alembic", "upgrade", "head"]
           envFrom:
             - configMapRef:
                 name: backend-config
