@@ -19,7 +19,6 @@ spec:
         app: frontend
     spec:
       securityContext:
-          runAsNonRoot: true
           seccompProfile:
             type: RuntimeDefault
       topologySpreadConstraints:
@@ -33,7 +32,6 @@ spec:
         - name: frontend
           image: ghcr.io/ts-a-devops/taskapp-frontend:26da2b0
           securityContext:
-            runAsNonRoot: true
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false
             capabilities:

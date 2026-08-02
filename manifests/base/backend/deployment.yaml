@@ -35,6 +35,7 @@ spec:
           image: ghcr.io/ts-a-devops/taskapp-backend:5d6b8fc
           securityContext:
             runAsNonRoot: true
+            runAsUser: 10001
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false
             capabilities:
