@@ -18,6 +18,7 @@ spec:
       labels:
         app: backend
     spec:
+      terminationGracePeriodSeconds: 30
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
