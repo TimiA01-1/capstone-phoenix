@@ -33,10 +33,6 @@ spec:
           image: ghcr.io/ts-a-devops/taskapp-frontend:26da2b0
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
             seccompProfile:
               type: RuntimeDefault
           ports:
