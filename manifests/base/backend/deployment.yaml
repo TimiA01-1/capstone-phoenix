@@ -19,6 +19,10 @@ spec:
         app: backend
     spec:
       terminationGracePeriodSeconds: 30
+      securityContext:
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -29,6 +33,15 @@ spec:
       containers:
         - name: backend
           image: ghcr.io/ts-a-devops/taskapp-backend:5d6b8fc
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           ports:
             - containerPort: 5000
           envFrom:
