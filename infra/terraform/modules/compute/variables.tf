@@ -21,3 +21,10 @@ variable "public_key_path" {
 variable "worker_count" {
   type = number
 }
+
+variable "ami_id" {
+  description = "Pinned Ubuntu 22.04 AMI ID (avoid data-source auto-updates replacing instances)"
+  type        = string
+  default     = "ami-0d30b6a4d95baf37f"
+}
+

@@ -20,7 +20,7 @@ resource "aws_key_pair" "phoenix" {
 }
 
 resource "aws_instance" "control_plane" {
-  ami                    = data.aws_ami.ubuntu.id
+  ami                    = var.ami_id
   instance_type          = var.instance_type
   subnet_id              = var.subnet_id
   vpc_security_group_ids = [var.security_group_id]
@@ -34,7 +34,7 @@ resource "aws_instance" "control_plane" {
 
 resource "aws_instance" "worker" {
   count                  = var.worker_count
-  ami                    = data.aws_ami.ubuntu.id
+  ami                    = var.ami_id
   instance_type          = var.instance_type
   subnet_id              = var.subnet_id
   vpc_security_group_ids = [var.security_group_id]
